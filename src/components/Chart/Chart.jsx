@@ -3,7 +3,7 @@ import {fetchDailyData }from '../../Api/index'
 import {Line,Bar} from 'react-chartjs-2'
 import style from './Chart.module.css'
 
-export default function Chart() {
+export default function Chart({data,country}) {
     const [dailyData, setDailyData] = useState([])
 
     useEffect(() => {
@@ -38,9 +38,28 @@ export default function Chart() {
         ) : null
       );
 
+    const barChar = (
+      data.confirmed?
+      (
+        <Bar data ={{
+          labels: ['Infected','Recovered','Deaths'],
+          datasets:[{
+            label:'People',
+            backgroundColor:['rgba(225,0,0,0.5)','rgba(0,0,225,0.5)','rgba(0,0,0,0.5)'],
+            data:[data.confirmed.value,data.recovered.value,data.deaths.value]
+          }]
+
+        }}
+        options={{
+          legend:{display:false},
+          title:{display:true, text:{country}}
+        }}/>
+
+      ): null
+    )
     return (
         <div className={style.container}>
-            {lineChart}
+            {country ? barChar : lineChart}
         </div>
     )
 }
